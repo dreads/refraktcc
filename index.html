@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A curated gallery of beautiful gemstones - browse our collection of fine sapphires, rubies, emeralds and more">
+    <meta name="theme-color" content="#2d2d2d">
+    <title>Refrakt Custom Cuts - Fine Gemstone Gallery</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header role="banner">
+        <div class="header-content">
+            <h1>Refrakt Custom Cuts</h1>
+            <p class="tagline">Exceptional gemstones shaped and polished in Austin, Texas.</p>
+        </div>
+        <nav class="main-nav" aria-label="Main navigation">
+            <ul>
+                <li><a href="index.html" class="active">Cut Gemstones</a></li>
+                <li><a href="custom.html">Custom Cutting</a></li>
+                <li><a href="about.html">Our Story</a></li>
+                <!-- Temporarily disabled -->
+                <!-- <li><a href="contact.html">Contact</a></li> -->
+            </ul>
+        </nav>
+    </header>
+
+    <main role="main">
+        <section class="controls" aria-label="Search and filter controls">
+            <div class="search-box">
+                <label for="search" class="visually-hidden">Search gemstones</label>
+                <input type="search" id="search" placeholder="Search by name, origin, cut...">
+            </div>
+            <div class="filter-box">
+                <label for="species-filter" class="visually-hidden">Filter by species</label>
+                <select id="species-filter">
+                    <option value="">All Gemstone Species</option>
+                </select>
+            </div>
+        </section>
+
+        <section id="gallery" class="gallery" aria-label="Gemstone gallery" aria-live="polite">
+            <div class="loading" role="status">
+                <div class="spinner"></div>
+                <p>Loading gemstones...</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-title" hidden>
+        <div class="lightbox-backdrop"></div>
+        <div class="lightbox-container">
+            <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+
+            <div class="lightbox-content">
+                <figure class="lightbox-gallery">
+                    <div class="lightbox-image-container">
+                        <button class="lightbox-nav lightbox-prev" aria-label="Previous image">&#10094;</button>
+                        <img id="lightbox-image" src="" alt="">
+                        <button class="lightbox-nav lightbox-next" aria-label="Next image">&#10095;</button>
+                    </div>
+                    <figcaption class="lightbox-thumbnails" id="lightbox-thumbnails">
+                        <!-- Thumbnails inserted dynamically -->
+                    </figcaption>
+                </figure>
+
+                <article class="lightbox-details">
+                    <header>
+                        <h2 id="lightbox-title"></h2>
+                    </header>
+
+                    <dl class="lightbox-specs">
+                        <div class="spec-group">
+                            <dt>Species</dt>
+                            <dd id="lightbox-species"></dd>
+                        </div>
+                        <div class="spec-group">
+                            <dt>Color</dt>
+                            <dd id="lightbox-color"></dd>
+                        </div>
+                        <div class="spec-group">
+                            <dt>Weight</dt>
+                            <dd id="lightbox-weight"></dd>
+                        </div>
+                        <div class="spec-group">
+                            <dt>Dimensions</dt>
+                            <dd id="lightbox-dimensions"></dd>
+                        </div>
+                        <div class="spec-group">
+                            <dt>Shape</dt>
+                            <dd id="lightbox-outline"></dd>
+                        </div>
+                        <div class="spec-group">
+                            <dt>Cut Design</dt>
+                            <dd id="lightbox-cut"></dd>
+                        </div>
+                        <div class="spec-group">
+                            <dt>Origin</dt>
+                            <dd id="lightbox-origin"></dd>
+                        </div>
+                        <div class="spec-group">
+                            <dt>Date Cut</dt>
+                            <dd id="lightbox-date"></dd>
+                        </div>
+                    </dl>
+
+                    <section class="lightbox-notes">
+                        <h3>Description</h3>
+                        <p id="lightbox-notes"></p>
+                    </section>
+
+                    <footer class="lightbox-actions">
+                        <!-- Temporarily disabled -->
+                        <button class="btn btn-primary" id="lightbox-inquiry" disabled style="display: none;">Inquire About This Gem</button>
+                    </footer>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <footer role="contentinfo">
+        <p>&copy; 2025 Refrakt Custom Cuts. All rights reserved.</p>
+    </footer>
+
+    <script src="js/gallery.js"></script>
+</body>
+</html>

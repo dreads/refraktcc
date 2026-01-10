@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Documentation for the Refrakt Custom Cuts - learn how to add gemstones, manage photos, and deploy your gallery">
+    <title>Documentation - Refrakt Custom Cuts</title>
+    <style>
+        :root {
+            --primary: #1a2634;
+            --secondary: #2c5282;
+            --accent: #b7791f;
+            --bg: #f7f7f7;
+            --card-bg: #ffffff;
+            --text: #1a202c;
+            --text-light: #4a5568;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            font-family: Georgia, serif;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        header nav {
+            margin-top: 1.5rem;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin: 0 0.25rem;
+            transition: all 0.2s;
+        }
+
+        header nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .sidebar h3:first-child {
+            margin-top: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar a {
+            display: block;
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 0.4rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar a:hover {
+            background: var(--bg);
+            color: var(--secondary);
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem;
+            max-width: 900px;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+            font-family: Georgia, serif;
+            font-weight: 500;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            color: var(--secondary);
+            margin: 2rem 0 1rem;
+        }
+
+        h4 {
+            font-size: 1rem;
+            color: var(--text);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        ul, ol {
+            margin: 1rem 0 1rem 1.5rem;
+            color: var(--text-light);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        strong {
+            color: var(--text);
+        }
+
+        /* Code */
+        code {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.875em;
+            background: var(--bg);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            color: var(--secondary);
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .comment { color: #6b7280; }
+        .string { color: #86efac; }
+        .key { color: #93c5fd; }
+        .number { color: #fcd34d; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg);
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        td {
+            color: var(--text-light);
+        }
+
+        tr:hover td {
+            background: var(--bg);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .card h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .tip {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+        }
+
+        .warning {
+            background: #fefce8;
+            border-left: 4px solid #eab308;
+        }
+
+        .info {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .checklist li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .checklist li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.7rem;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        footer a {
+            color: white;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            main {
+                padding: 2rem 1rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.75rem;
+            }
+
+            header nav a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            pre {
+                font-size: 0.8rem;
+                padding: 1rem;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Refrakt Custom Cuts Documentation</h1>
+        <p>Everything you need to manage your gemstone gallery</p>
+        <nav>
+            <a href="index.html">View Gallery</a>
+            <a href="https://github.com/yourusername/gemcatalog">GitHub</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Getting Started</h3>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#live-site">Live Site</a></li>
+                <li><a href="#structure">Project Structure</a></li>
+            </ul>
+
+            <h3>Managing Gems</h3>
+            <ul>
+                <li><a href="#adding-gems">Adding Gemstones</a></li>
+                <li><a href="#json-schema">JSON Schema</a></li>
+                <li><a href="#data-entry">Google Sheets Entry</a></li>
+                <li><a href="#photos">Adding Photos & Videos</a></li>
+                <li><a href="#thumbnails">Creating Thumbnails</a></li>
+            </ul>
+
+            <h3>Development</h3>
+            <ul>
+                <li><a href="#local-dev">Local Development</a></li>
+                <li><a href="#troubleshooting">Troubleshooting</a></li>
+            </ul>
+
+            <h3>Deployment</h3>
+            <ul>
+                <li><a href="#github-pages">GitHub Pages Setup</a></li>
+                <li><a href="#updating">Updating the Site</a></li>
+            </ul>
+
+            <h3>Reference</h3>
+            <ul>
+                <li><a href="#future">Future Ideas</a></li>
+                <li><a href="#browser-support">Browser Support</a></li>
+            </ul>
+        </aside>
+
+        <main>
+            <!-- Overview -->
+            <section id="overview">
+                <h2>Overview</h2>
+                <p>Refrakt Custom Cuts is a beautiful, responsive photo gallery for showcasing gemstones. It's built as a static website that runs on GitHub Pages - no server or database required.</p>
+
+                <h3>Features</h3>
+                <ul>
+                    <li><strong>Responsive Grid Layout</strong> - Looks great on desktop, tablet, and mobile</li>
+                    <li><strong>Interactive Lightbox</strong> - Click any gem to view full details and multiple photos</li>
+                    <li><strong>Image Gallery</strong> - Support for multiple images per gemstone</li>
+                    <li><strong>Search & Filter</strong> - Find gems by species, color, origin, or cut name</li>
+                    <li><strong>Professional Design</strong> - Clean aesthetic suitable for jewelry shoppers</li>
+                    <li><strong>Accessible</strong> - Keyboard navigation and screen reader support</li>
+                </ul>
+            </section>
+
+            <!-- Live Site -->
+            <section id="live-site">
+                <h2>Live Site</h2>
+                <p>Once deployed, your gallery will be available at:</p>
+                <pre><code>https://yourusername.github.io/gemcatalog/</code></pre>
+                <p>Replace <code>yourusername</code> with your GitHub username.</p>
+            </section>
+
+            <!-- Project Structure -->
+            <section id="structure">
+                <h2>Project Structure</h2>
+                <pre><code>gemcatalog/
+├── index.html              <span class="comment"># Main gallery page</span>
+├── docs.html               <span class="comment"># This documentation</span>
+├── css/
+│   └── style.css           <span class="comment"># All styles</span>
+├── js/
+│   └── gallery.js          <span class="comment"># Gallery logic</span>
+├── data/
+│   └── gemstones.json      <span class="comment"># Gem database (edit this!)</span>
+└── images/
+    └── gems/
+        ├── sapphire-001/   <span class="comment"># Each gem gets a folder</span>
+        │   ├── main.jpg
+        │   └── side.jpg
+        └── garnet-001/</code></pre>
+            </section>
+
+            <!-- Adding Gemstones -->
+            <section id="adding-gems">
+                <h2>Adding New Gemstones</h2>
+
+                <h3>Step 1: Create an Image Folder</h3>
+                <p>Create a new folder in <code>images/gems/</code> for your gemstone:</p>
+                <pre><code>mkdir images/gems/tourmaline-001</code></pre>
+
+                <div class="card tip">
+                    <h4>Naming Convention</h4>
+                    <p>Use the format <code>{species}-{number}</code> for folder names. Examples: <code>sapphire-001</code>, <code>garnet-002</code>, <code>tourmaline-001</code></p>
+                </div>
+
+                <h3>Step 2: Add Photos</h3>
+                <p>Copy your gemstone photos into the folder. You'll specify which images to display in the JSON file.</p>
+
+                <h3>Step 3: Edit gemstones.json</h3>
+                <p>Open <code>data/gemstones.json</code> and add a new entry to the array:</p>
+                <pre><code>{
+  <span class="key">"id"</span>: <span class="number">4</span>,
+  <span class="key">"species"</span>: <span class="string">"Tourmaline"</span>,
+  <span class="key">"color"</span>: <span class="string">"Blue-Green"</span>,
+  <span class="key">"weightCarats"</span>: <span class="number">2.15</span>,
+  <span class="key">"dimensions"</span>: <span class="string">"8.1x6.3x4.9mm"</span>,
+  <span class="key">"outline"</span>: <span class="string">"Oval"</span>,
+  <span class="key">"cutName"</span>: <span class="string">"Portuguese Cut"</span>,
+  <span class="key">"sourceGeo"</span>: <span class="string">"Paraiba, Brazil"</span>,
+  <span class="key">"isMined"</span>: <span class="number">true</span>,
+  <span class="key">"dateCut"</span>: <span class="string">"2024-11-15"</span>,
+  <span class="key">"notes"</span>: <span class="string">"Exceptional neon blue-green color..."</span>,
+  <span class="key">"imagesPath"</span>: <span class="string">"images/gems/tourmaline-001"</span>,
+  <span class="key">"defaultImage"</span>: <span class="string">"main.jpg"</span>,
+  <span class="key">"additionalImages"</span>: [<span class="string">"side.jpg"</span>, <span class="string">"detail.jpg"</span>],
+  <span class="key">"price"</span>: <span class="number">12500</span>
+}</code></pre>
+            </section>
+
+            <!-- JSON Schema -->
+            <section id="json-schema">
+                <h2>JSON Field Reference</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>number</td>
+                            <td>Unique identifier (increment from last entry)</td>
+                        </tr>
+                        <tr>
+                            <td><code>species</code></td>
+                            <td>string</td>
+                            <td>Gem species (Sapphire, Ruby, Garnet, etc.)</td>
+                        </tr>
+                        <tr>
+                            <td><code>color</code></td>
+                            <td>string</td>
+                            <td>Primary color (Blue, Green, Pink, Padparadscha)</td>
+                        </tr>
+                        <tr>
+                            <td><code>weightCarats</code></td>
+                            <td>number</td>
+                            <td>Weight in carats (decimal)</td>
+                        </tr>
+                        <tr>
+                            <td><code>dimensions</code></td>
+                            <td>string</td>
+                            <td>Length x Width x Depth in mm</td>
+                        </tr>
+                        <tr>
+                            <td><code>outline</code></td>
+                            <td>string</td>
+                            <td>Shape (Oval, Cushion, Round, Pear, etc.)</td>
+                        </tr>
+                        <tr>
+                            <td><code>cutName</code></td>
+                            <td>string</td>
+                            <td>Cut design name</td>
+                        </tr>
+                        <tr>
+                            <td><code>sourceGeo</code></td>
+                            <td>string</td>
+                            <td>Geographic origin (if natural)</td>
+                        </tr>
+                        <tr>
+                            <td><code>isMined</code></td>
+                            <td>boolean</td>
+                            <td><code>true</code> for natural, <code>false</code> for lab-created</td>
+                        </tr>
+                        <tr>
+                            <td><code>dateCut</code></td>
+                            <td>string</td>
+                            <td>ISO date when cut (YYYY-MM-DD)</td>
+                        </tr>
+                        <tr>
+                            <td><code>notes</code></td>
+                            <td>string</td>
+                            <td>Description, characteristics, certifications</td>
+                        </tr>
+                        <tr>
+                            <td><code>imagesPath</code></td>
+                            <td>string</td>
+                            <td>Path to the gem's image folder</td>
+                        </tr>
+                        <tr>
+                            <td><code>defaultImage</code></td>
+                            <td>string</td>
+                            <td>Filename of the primary/card image</td>
+                        </tr>
+                        <tr>
+                            <td><code>additionalImages</code></td>
+                            <td>array</td>
+                            <td>Array of additional image/video filenames (.jpg, .png, .mp4, .webm, .mov)</td>
+                        </tr>
+                        <tr>
+                            <td><code>price</code></td>
+                            <td>number</td>
+                            <td>Price in USD (whole number)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Data Entry -->
+            <section id="data-entry">
+                <h2>Google Sheets Data Entry</h2>
+                <p>For easier data entry with voice typing support, use the included CSV template:</p>
+
+                <h3>Setup</h3>
+                <ol>
+                    <li>Open <a href="https://sheets.google.com">Google Sheets</a></li>
+                    <li>File → Import → Upload <code>gemstones-template.csv</code></li>
+                </ol>
+
+                <h3>Voice Typing</h3>
+                <ol>
+                    <li>Click a cell and press <code>Ctrl+Shift+S</code> (or Tools → Voice typing)</li>
+                    <li>Speak your data, press Tab to move between fields</li>
+                    <li>For <code>additionalImages</code>, separate filenames with <code>|</code> (pipe)</li>
+                    <li>For <code>isMined</code>, use <code>TRUE</code> or <code>FALSE</code></li>
+                </ol>
+
+                <h3>Convert Back to JSON</h3>
+                <pre><code># Download as CSV from Google Sheets (File → Download → CSV)
+# Save as gemstones-template.csv, then run:
+python3 csv-to-json.py gemstones-template.csv</code></pre>
+            </section>
+
+            <!-- Photos -->
+            <section id="photos">
+                <h2>Adding Gem Photos & Videos</h2>
+
+                <h3>Recommended Image Specifications</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Recommendation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Format</td>
+                            <td>JPEG (.jpg) for photos</td>
+                        </tr>
+                        <tr>
+                            <td>Dimensions</td>
+                            <td>1200x1200px or larger</td>
+                        </tr>
+                        <tr>
+                            <td>Quality</td>
+                            <td>80-85% JPEG quality</td>
+                        </tr>
+                        <tr>
+                            <td>File Size</td>
+                            <td>Under 500KB per image</td>
+                        </tr>
+                        <tr>
+                            <td>Color Space</td>
+                            <td>sRGB for web</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Video Specifications</h3>
+                <p>The gallery supports short videos to showcase sparkle and fire:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Recommendation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Format</td>
+                            <td>MP4 (.mp4), WebM (.webm), MOV (.mov)</td>
+                        </tr>
+                        <tr>
+                            <td>Duration</td>
+                            <td>5-15 seconds ideal</td>
+                        </tr>
+                        <tr>
+                            <td>Resolution</td>
+                            <td>1080p or 720p</td>
+                        </tr>
+                        <tr>
+                            <td>File Size</td>
+                            <td>Under 10MB per video</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Videos play automatically with loop in the lightbox and show a play icon on thumbnails.</p>
+
+                <h3>Suggested Photo Angles</h3>
+                <ul>
+                    <li><strong>main.jpg</strong> - Hero shot, face-up view showing brilliance</li>
+                    <li><strong>side.jpg</strong> - Profile view showing depth and pavilion</li>
+                    <li><strong>back.jpg</strong> - View of the pavilion/bottom</li>
+                    <li><strong>detail.jpg</strong> - Macro shot showing special features</li>
+                    <li><strong>scale.jpg</strong> - Photo with size reference</li>
+                    <li><strong>sparkle.mp4</strong> - Short video showing light play and fire</li>
+                </ul>
+
+                <div class="card tip">
+                    <h4>Photography Tips</h4>
+                    <ul>
+                        <li>Use diffused lighting to show color accurately</li>
+                        <li>Neutral gray or white background works best</li>
+                        <li>Ensure the table (top facet) is sharp</li>
+                        <li>Use consistent lighting across all gems</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Thumbnails -->
+            <section id="thumbnails">
+                <h2>Creating Thumbnails</h2>
+                <p>The gallery uses your full-size images for thumbnails. For optimal performance, consider optimizing your images.</p>
+
+                <h3>Using ImageMagick (Command Line)</h3>
+                <pre><code><span class="comment"># Install</span>
+brew install imagemagick  <span class="comment"># macOS</span>
+sudo apt install imagemagick  <span class="comment"># Ubuntu</span>
+
+<span class="comment"># Resize and optimize</span>
+convert input.jpg -resize 1200x1200 -quality 85 output.jpg
+
+<span class="comment"># Batch process</span>
+for f in *.jpg; do convert "$f" -resize 1200x1200 -quality 85 "opt_$f"; done</code></pre>
+
+                <h3>GUI Tools</h3>
+                <ul>
+                    <li><strong>macOS:</strong> Preview (built-in), ImageOptim (free)</li>
+                    <li><strong>Windows:</strong> IrfanView, FastStone Photo Resizer</li>
+                    <li><strong>Online:</strong> Squoosh.app, TinyPNG.com</li>
+                </ul>
+            </section>
+
+            <!-- Local Development -->
+            <section id="local-dev">
+                <h2>Local Development</h2>
+
+                <h3>Option 1: Python (Recommended)</h3>
+                <pre><code><span class="comment"># Navigate to project</span>
+cd gemcatalog
+
+<span class="comment"># Start local server</span>
+python3 -m http.server 8000
+
+<span class="comment"># Open browser</span>
+open http://localhost:8000</code></pre>
+
+                <h3>Option 2: VS Code Live Server</h3>
+                <ol>
+                    <li>Install the <a href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer">Live Server extension</a></li>
+                    <li>Open the project folder in VS Code</li>
+                    <li>Right-click <code>index.html</code> &rarr; "Open with Live Server"</li>
+                </ol>
+
+                <h3>Option 3: Node.js</h3>
+                <pre><code>npx serve</code></pre>
+            </section>
+
+            <!-- Troubleshooting -->
+            <section id="troubleshooting">
+                <h2>Troubleshooting</h2>
+
+                <div class="card warning">
+                    <h4>Images not loading?</h4>
+                    <ul>
+                        <li>Check file paths in <code>gemstones.json</code> match actual folder/file names</li>
+                        <li>Ensure you're using a local server (not <code>file://</code>)</li>
+                        <li>Check browser console (F12) for 404 errors</li>
+                    </ul>
+                </div>
+
+                <div class="card warning">
+                    <h4>JSON errors?</h4>
+                    <ul>
+                        <li>Validate at <a href="https://jsonlint.com">jsonlint.com</a></li>
+                        <li>Check for missing commas, quotes, or brackets</li>
+                        <li>Ensure <code>id</code> values are unique</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- GitHub Pages -->
+            <section id="github-pages">
+                <h2>GitHub Pages Setup</h2>
+
+                <h3>Initial Setup</h3>
+                <ol>
+                    <li>Create a GitHub repository named <code>gemcatalog</code></li>
+                    <li>Push your code:
+                        <pre><code>git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/yourusername/gemcatalog.git
+git push -u origin main</code></pre>
+                    </li>
+                    <li>Enable GitHub Pages:
+                        <ul>
+                            <li>Go to <strong>Settings</strong> &rarr; <strong>Pages</strong></li>
+                            <li>Source: <strong>Deploy from a branch</strong></li>
+                            <li>Branch: <strong>main</strong> / <strong>root</strong></li>
+                            <li>Click <strong>Save</strong></li>
+                        </ul>
+                    </li>
+                    <li>Wait 1-2 minutes, then visit your site!</li>
+                </ol>
+            </section>
+
+            <!-- Updating -->
+            <section id="updating">
+                <h2>Updating the Site</h2>
+                <p>After making changes locally:</p>
+                <pre><code><span class="comment"># Stage changes</span>
+git add .
+
+<span class="comment"># Commit with message</span>
+git commit -m "Add new tourmaline gemstone"
+
+<span class="comment"># Push to deploy</span>
+git push</code></pre>
+
+                <h3>Quick Commands</h3>
+                <pre><code><span class="comment"># Add a new gem</span>
+git add data/gemstones.json images/gems/
+git commit -m "Add [gem name]"
+git push
+
+<span class="comment"># Update gem details</span>
+git add data/gemstones.json
+git commit -m "Update [gem name] details"
+git push</code></pre>
+
+                <div class="card info">
+                    <h4>Deployment Time</h4>
+                    <p>Changes typically appear on the live site within 1-2 minutes after pushing.</p>
+                </div>
+            </section>
+
+            <!-- Future Ideas -->
+            <section id="future">
+                <h2>Future Enhancement Ideas</h2>
+
+                <h3>Features</h3>
+                <ul class="checklist">
+                    <li>Sorting options (price, weight, date added)</li>
+                    <li>Price range filter slider</li>
+                    <li>Favorites/wishlist with localStorage</li>
+                    <li>Side-by-side gem comparison</li>
+                    <li>Zoom on hover magnifying glass</li>
+                    <li>Video support for sparkle demos</li>
+                    <li>Certificate viewer (GIA/AGL)</li>
+                    <li>Social sharing buttons</li>
+                </ul>
+
+                <h3>Technical</h3>
+                <ul class="checklist">
+                    <li>Automatic WebP conversion</li>
+                    <li>Shareable filtered URLs</li>
+                    <li>PWA offline support</li>
+                    <li>Analytics integration</li>
+                    <li>Contact form with gem ID</li>
+                    <li>Dark mode toggle</li>
+                </ul>
+
+                <h3>Content</h3>
+                <ul class="checklist">
+                    <li>Gem education pages</li>
+                    <li>Cut diagram library</li>
+                    <li>Size comparison tool</li>
+                    <li>About/bio page</li>
+                </ul>
+            </section>
+
+            <!-- Browser Support -->
+            <section id="browser-support">
+                <h2>Browser Support</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Browser</th>
+                            <th>Version</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Chrome</td><td>Latest 2 versions</td></tr>
+                        <tr><td>Firefox</td><td>Latest 2 versions</td></tr>
+                        <tr><td>Safari</td><td>Latest 2 versions</td></tr>
+                        <tr><td>Edge</td><td>Latest 2 versions</td></tr>
+                        <tr><td>Mobile Safari</td><td>iOS 14+</td></tr>
+                        <tr><td>Chrome Android</td><td>Latest</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>Refrakt Custom Cuts &copy; 2025 | <a href="index.html">Back to Gallery</a> | <a href="https://github.com/yourusername/gemcatalog">GitHub</a></p>
+    </footer>
+</body>
+</html>
