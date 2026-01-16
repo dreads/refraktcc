@@ -1,5 +1,24 @@
 [
   {
+    "id": 27,
+    "species": "Spinel",
+    "color": "Burma Dark Blue",
+    "weightCarats": 2.2,
+    "dimensions": "8.3x6.7mm",
+    "outline": "Antique Cushion",
+    "cutName": "Pillow 1.25",
+    "sourceGeo": "",
+    "isMined": false,
+    "dateCut": "2026-01-15",
+    "notes": "This antique cushion cut lab spinel has a classic \"pillow\" shape has a deep, luxurious blue that appears to glow from within. The barions along the pavilion add modern optical performance to vintage aesthetic. \n\nThe material is from the famed line of Djeva spinel exudes a rich, saturated deep blue with a slightly inky, velvety quality reminiscent of fine Burmese sapphires. It has excellent saturation without being overly dark or \"sleepy\", showing subtle violet secondary flashes in certain lighting. Photos 3 and 4 are of this exceptional material prior to cutting.",
+    "imagesPath": "images/gems/burma-spinel-antique-cushion",
+    "defaultImage": "burma-spinel-antique-cushion.jpg",
+    "additionalImages": [
+      "burma-spinel-antique-cushion.mp4","burma-spinel-antique-cushion-uncut-1.jpg","burma-spinel-antique-cushion-uncut-2.jpg"
+    ],
+    "price": 0
+  },
+  {
     "id": 26,
     "species": "Sapphire",
     "color": "Pink/Purple",
