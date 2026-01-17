@@ -148,10 +148,20 @@
      */
     function createGemCard(gem) {
         const imageSrc = `${gem.imagesPath}/${gem.defaultImage}`;
+        const labIndicator = gem.isMined ? '' : `
+            <div class="gem-lab-indicator" title="Lab-created gemstone">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M9 3h6v5l4 9a2 2 0 0 1-1.8 2.9H6.8A2 2 0 0 1 5 17l4-9V3z"/>
+                    <path d="M9 3h6" stroke-linecap="round"/>
+                    <path d="M7 14.5l10 0"/>
+                    <polygon points="12,11 14,15 10,15" fill="currentColor" stroke="none"/>
+                </svg>
+            </div>`;
 
         return `
             <article class="gem-card" data-id="${gem.id}" tabindex="0" role="button" aria-label="View ${gem.species} details">
                 <figure class="gem-image">
+                    ${labIndicator}
                     <img src="${imageSrc}" alt="${gem.species}" loading="lazy">
                     <div class="gem-overlay">
                         <span class="view-details">View Details</span>
