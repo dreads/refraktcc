@@ -1,5 +1,24 @@
 [
   {
+    "id": 28,
+    "species": "Emerald",
+    "color": "Green",
+    "weightCarats": 0.9,
+    "dimensions": "7.5x8mm",
+    "outline": "Cushion Triangle",
+    "cutName": "Teaching Trillion by Akhavan",
+    "sourceGeo": "Colombia",
+    "isMined": true,
+    "dateCut": "2025-08-17",
+    "notes": "The bright green Colombian Emerald was cut from rough purchased from a private seller in Bastrop, Texas. The jardin of inclusions make this trillion cut unique from every angle. In house Type A treated  with natural cedar oil to ethically enhance clarity without permanently altering the stone.",
+    "imagesPath": "images/gems/emerald-colombia-trillion-0.9",
+    "defaultImage": "emerald-colombia-trillion-0.9.jpg",
+    "additionalImages": [
+      "emerald-colombia-trillion-0.9.mp4"
+    ],
+    "price": 0
+  },
+  {
     "id": 27,
     "species": "Spinel",
     "color": "Burma Dark Blue",
@@ -14,7 +33,9 @@
     "imagesPath": "images/gems/burma-spinel-antique-cushion",
     "defaultImage": "burma-spinel-antique-cushion.jpg",
     "additionalImages": [
-      "burma-spinel-antique-cushion.mp4","burma-spinel-antique-cushion-uncut-1.jpg","burma-spinel-antique-cushion-uncut-2.jpg"
+      "burma-spinel-antique-cushion.mp4",
+      "burma-spinel-antique-cushion-uncut-1.jpg",
+      "burma-spinel-antique-cushion-uncut-2.jpg"
     ],
     "price": 0
   },
@@ -190,6 +211,23 @@
     "additionalImages": [
       "topaz-white-hex-vietnam-4.0.mp4"
     ],
+    "price": 0
+  },
+  {
+    "id": 30,
+    "species": "Emerald",
+    "color": "Green",
+    "weightCarats": 0.4,
+    "dimensions": "7.1x3.6mm",
+    "outline": "Emerald",
+    "cutName": "Emerald",
+    "sourceGeo": "Zambia",
+    "isMined": true,
+    "dateCut": "2025-08-14",
+    "notes": "These small Zambian emeralds have a deeper darker, more saturated green and tend to be cleaner than Colombian varieties.  In house Type A treated with natural cedar oil to ethically enhance clarity without permanently altering the stone.",
+    "imagesPath": "images/gems/emerald-zambia-0.4",
+    "defaultImage": "emerald-zambia-0.4.jpg",
+    "additionalImages": [],
     "price": 0
   },
   {

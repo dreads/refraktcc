@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive map showing global concentration of custom gemstone cutters - discover why precision cutting is rare in the USA">
+    <meta name="theme-color" content="#2d2d2d">
+    <title>Global Gemstone Cutters - Refrakt Custom Cuts</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Source+Sans+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+    <style>
+        /* Map page overrides - these take precedence over style.css */
+        .map-page-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .map-page-content .container {
+            padding: 40px 24px;
+        }
+
+        .map-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .map-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 500;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+            letter-spacing: 0.02em;
+        }
+
+        .map-data-source {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.72rem;
+            color: var(--gray-400);
+        }
+        :root {
+            /* Grayscale base */
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+
+            /* Pastel accent colors for concentration levels */
+            --level-minimal: #d6d6d6;
+            --level-low: #b8c9d9;
+            --level-medium: #a8d4b8;
+            --level-high: #f0d78c;
+            --level-very-high: #e6a676;
+
+            /* USA special highlight */
+            --usa-color: #dbb8b8;
+            --usa-stroke: #c49999;
+
+            --ocean: #edf1f5;
+            --border: #ffffff;
+            --text-dark: #2d2d2d;
+            --text-muted: #6b6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #fafafa 0%, #f0f0f0 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+            opacity: 0.7;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .map-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        .map-container {
+            position: relative;
+            background: var(--ocean);
+            min-height: 400px;
+        }
+
+        #map {
+            width: 100%;
+            display: block;
+        }
+
+        .country {
+            stroke: var(--border);
+            stroke-width: 0.5;
+            stroke-linejoin: round;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .country:hover {
+            stroke: var(--gray-500);
+            stroke-width: 1;
+            filter: brightness(0.92);
+        }
+
+        .country.minimal { fill: var(--level-minimal); }
+        .country.low { fill: var(--level-low); }
+        .country.medium { fill: var(--level-medium); }
+        .country.high { fill: var(--level-high); }
+        .country.very-high { fill: var(--level-very-high); }
+        .country.usa-special {
+            fill: var(--usa-color);
+            stroke: var(--usa-stroke);
+            stroke-width: 0.8;
+        }
+        .country.no-data { fill: var(--gray-200); }
+
+        /* Static markers for major centers */
+        .pulse-marker {
+            fill: none;
+            stroke: #c85a35;
+            stroke-width: 2;
+            opacity: 0.6;
+        }
+
+        .pulse-marker-inner {
+            fill: #e87d55;
+            stroke: white;
+            stroke-width: 1;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 14px 18px;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: all 0.2s ease;
+            z-index: 1000;
+            max-width: 280px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tooltip h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 6px;
+        }
+
+        .tooltip p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .tooltip .level-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .tooltip .level-badge.minimal { background: var(--level-minimal); color: var(--gray-700); }
+        .tooltip .level-badge.low { background: var(--level-low); color: var(--gray-800); }
+        .tooltip .level-badge.medium { background: var(--level-medium); color: var(--gray-800); }
+        .tooltip .level-badge.high { background: var(--level-high); color: var(--gray-800); }
+        .tooltip .level-badge.very-high { background: var(--level-very-high); color: var(--gray-800); }
+        .tooltip .level-badge.usa-special { background: var(--usa-color); color: var(--gray-800); }
+
+        /* Legend */
+        .legend-section {
+            padding: 24px 32px;
+            background: var(--gray-100);
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .legend-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .legend-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 28px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .legend-color.minimal { background: var(--level-minimal); }
+        .legend-color.low { background: var(--level-low); }
+        .legend-color.medium { background: var(--level-medium); }
+        .legend-color.high { background: var(--level-high); }
+        .legend-color.very-high { background: var(--level-very-high); }
+        .legend-color.usa-special { background: var(--usa-color); }
+
+        .legend-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .legend-label strong {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* USA Callout */
+        .callout {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 28px;
+            border-left: 4px solid var(--usa-color);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .callout h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--gray-800);
+            margin-bottom: 10px;
+        }
+
+        .callout p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            max-width: 680px;
+            line-height: 1.7;
+        }
+
+        .callout .highlight-stat {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 10px 18px;
+            background: linear-gradient(135deg, #fdf6f6 0%, #f9eded 100%);
+            border: 1px solid #e8d4d4;
+            border-radius: 8px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            color: #8b6b6b;
+        }
+
+        /* Key Regions */
+        .regions-section {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 32px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .regions-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--gray-800);
+            margin-bottom: 18px;
+        }
+
+        .regions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .region-card {
+            padding: 18px;
+            background: var(--gray-50);
+            border-radius: 10px;
+            border-left: 3px solid var(--level-very-high);
+        }
+
+        .region-card.high-level { border-left-color: var(--level-high); }
+        .region-card.medium-level { border-left-color: var(--level-medium); }
+
+        .region-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 6px;
+        }
+
+        .region-card p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        .region-card .stat {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        /* Quote section */
+        .quote-section {
+            text-align: center;
+            padding: 40px 24px;
+            margin-top: 28px;
+        }
+
+        .quote-section blockquote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--gray-600);
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            color: var(--gray-500);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 24px 16px; }
+            .legend-section { padding: 20px; }
+            .legend-grid { gap: 10px 16px; }
+            .callout, .regions-section { padding: 22px 18px; }
+            .legend-label { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <header role="banner">
+        <div class="header-content">
+            <h1>Refrakt Custom Cuts</h1>
+            <p class="tagline">Exceptional gemstones shaped and polished in Austin, Texas.</p>
+        </div>
+        <nav class="main-nav" aria-label="Main navigation">
+            <ul>
+                <li><a href="index.html">Cut Gemstones</a></li>
+<!--                <li><a href="custom.html">Custom Cutting</a></li>-->
+                <li><a href="about.html">Our Story</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main role="main">
+    <div class="map-page-content">
+    <div class="container">
+        <div class="map-header">
+            <h2 class="map-title">The World's Gemstone Artisans</h2>
+            <p class="subtitle">Relative concentration of custom gemstone cutters by country</p>
+        </div>
+
+        <div class="map-card">
+            <div class="map-container">
+                <div id="map" class="loading">Loading map...</div>
+            </div>
+
+            <div class="legend-section">
+                <div class="legend-title">Concentration of Custom Gemstone Cutters</div>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <div class="legend-color very-high"></div>
+                        <span class="legend-label"><strong>Very High</strong> — India, Thailand</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color high"></div>
+                        <span class="legend-label"><strong>High</strong> — China, Sri Lanka, Israel</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color medium"></div>
+                        <span class="legend-label"><strong>Medium</strong> — Germany, Myanmar, E. Africa</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color low"></div>
+                        <span class="legend-label"><strong>Low</strong> — Belgium, UK, Japan, Brazil</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color minimal"></div>
+                        <span class="legend-label"><strong>Minimal</strong> — Most countries</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color usa-special"></div>
+                        <span class="legend-label"><strong>USA</strong> — Very few cutters (#1 consumer)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <h2>The Scarcity in America</h2>
+            <p>
+                While the United States is the world's largest consumer of gemstones—importing roughly one-third of all colored gems globally—<strong>custom gemstone cutters are exceptionally rare</strong>. The vast majority of stones sold in America are cut overseas, primarily in India, Thailand, and Sri Lanka, where generations of artisans have perfected their craft.
+            </p>
+            <div class="highlight-stat">Fewer than 0.1% of the world's gemstone cutters work in the USA</div>
+        </div>
+
+        <div class="regions-section">
+            <h2>Where the World's Master Cutters Work</h2>
+            <div class="regions-grid">
+                <div class="region-card">
+                    <h3>Jaipur, India</h3>
+                    <p>Global capital of gemstone cutting. <span class="stat">100,000+ workers</span> process ~90% of the world's diamonds and centuries of colored stone expertise.</p>
+                </div>
+                <div class="region-card">
+                    <h3>Bangkok, Thailand</h3>
+                    <p>Colored gemstone capital with <span class="stat">100,000+ trade workers</span>. World leader in ruby and sapphire cutting.</p>
+                </div>
+                <div class="region-card high-level">
+                    <h3>Sri Lanka</h3>
+                    <p>"Island of Gems" with <span class="stat">2,000+ years</span> of cutting tradition. Famous for sapphires.</p>
+                </div>
+                <div class="region-card medium-level">
+                    <h3>Idar-Oberstein, Germany</h3>
+                    <p>Europe's historic center with <span class="stat">500+ years</span> of tradition. Known for agate and precision work.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-section">
+            <blockquote>
+                "Every gemstone tells the story of the hands that shaped it. Know your cutter. Treasure their craft."
+            </blockquote>
+        </div>
+
+        <p class="map-data-source">Data synthesized from GIA, CIBJO, and industry trade reports. Map data © Natural Earth.</p>
+    </div>
+    </div>
+    </main>
+
+    <footer role="contentinfo">
+        <p>&copy; 2025 Refrakt Custom Cuts. All rights reserved.</p>
+    </footer>
+
+    <div class="tooltip" id="tooltip">
+        <h3></h3>
+        <p></p>
+        <span class="level-badge"></span>
+    </div>
+
+    <script>
+        // Country data with concentration levels and descriptions
+        const countryData = {
+            'USA': { name: "United States", level: "usa-special", description: "World's largest consumer but very few custom cutters. Most gems are imported pre-cut from Asia." },
+            'CAN': { name: "Canada", level: "minimal", description: "Known for ethically-mined diamonds, but minimal local cutting." },
+            'MEX': { name: "Mexico", level: "low", description: "Some local cutting of fire opals and silver-work traditions." },
+            'BRA': { name: "Brazil", level: "low", description: "Growing cutting industry for tourmaline, aquamarine, and topaz." },
+            'COL': { name: "Colombia", level: "low", description: "World-famous emerald source with developing local cutting." },
+            'ARG': { name: "Argentina", level: "minimal", description: "Limited gemstone cutting activity." },
+            'CHL': { name: "Chile", level: "minimal", description: "Known for lapis lazuli, limited cutting." },
+            'PER': { name: "Peru", level: "minimal", description: "Some opal deposits with minimal cutting." },
+            'VEN': { name: "Venezuela", level: "minimal", description: "Limited cutting activity." },
+            'GBR': { name: "United Kingdom", level: "low", description: "Small but respected community of precision cutters in London." },
+            'DEU': { name: "Germany", level: "medium", description: "Historic center in Idar-Oberstein with 500+ years of tradition." },
+            'FRA': { name: "France", level: "low", description: "High-end bespoke cutting for luxury jewelry houses." },
+            'ITA': { name: "Italy", level: "low", description: "Specialized cutting for cameos, coral, and colored stones." },
+            'ESP': { name: "Spain", level: "low", description: "Limited cutting industry." },
+            'BEL': { name: "Belgium", level: "low", description: "Antwerp: diamond trading hub, though cutting moved to India." },
+            'NLD': { name: "Netherlands", level: "low", description: "Historic diamond trading, limited modern cutting." },
+            'CHE': { name: "Switzerland", level: "low", description: "High-end watch industry connection, some precision gem work." },
+            'POL': { name: "Poland", level: "minimal", description: "Known for amber processing from Baltic deposits." },
+            'RUS': { name: "Russia", level: "minimal", description: "Some diamond and alexandrite cutting, limited scale." },
+            'UKR': { name: "Ukraine", level: "minimal", description: "Some amber processing." },
+            'TUR': { name: "Turkey", level: "low", description: "Historic trading routes, some local cutting." },
+            'ISR': { name: "Israel", level: "high", description: "Traditional diamond cutting center with high-precision expertise." },
+            'ARE': { name: "UAE", level: "low", description: "Dubai is a major trading hub, limited cutting." },
+            'IND': { name: "India", level: "very-high", description: "Global leader: ~90% of world's diamonds. Jaipur has 100,000+ workers." },
+            'THA': { name: "Thailand", level: "very-high", description: "Bangkok is the colored gem capital. 100,000+ trade workers." },
+            'LKA': { name: "Sri Lanka", level: "high", description: "'Island of Gems' with 2,000+ years of cutting tradition." },
+            'CHN': { name: "China", level: "high", description: "Massive cutting industry for commercial stones and jade." },
+            'HKG': { name: "Hong Kong", level: "high", description: "Major trading hub with significant cutting and manufacturing." },
+            'MMR': { name: "Myanmar", level: "medium", description: "Source of world's finest rubies with local cutting in Mogok." },
+            'VNM': { name: "Vietnam", level: "low", description: "Growing cutting industry for spinels and rubies." },
+            'JPN': { name: "Japan", level: "low", description: "Precision cutting for high-end market, small scale." },
+            'KOR': { name: "South Korea", level: "minimal", description: "Some jewelry manufacturing, limited cutting." },
+            'TWN': { name: "Taiwan", level: "minimal", description: "Some jade and coral work." },
+            'IDN': { name: "Indonesia", level: "low", description: "Some local cutting of opals and pearls." },
+            'MYS': { name: "Malaysia", level: "low", description: "Growing jewelry industry with some cutting." },
+            'PHL': { name: "Philippines", level: "minimal", description: "Pearl industry, limited gemstone cutting." },
+            'AUS': { name: "Australia", level: "low", description: "Opal cutting tradition in Lightning Ridge and Coober Pedy." },
+            'NZL': { name: "New Zealand", level: "minimal", description: "Known for jade (pounamu) carving traditions." },
+            'ZAF': { name: "South Africa", level: "medium", description: "Diamond cutting tradition from Kimberley era." },
+            'TZA': { name: "Tanzania", level: "medium", description: "Home of tanzanite, with growing local cutting." },
+            'KEN': { name: "Kenya", level: "medium", description: "Emerging cutting for tsavorite and ruby from Tsavo." },
+            'MDG': { name: "Madagascar", level: "low", description: "Developing facilities for sapphires." },
+            'ZMB': { name: "Zambia", level: "low", description: "Major emerald source with developing cutting." },
+            'MOZ': { name: "Mozambique", level: "low", description: "Ruby deposits with emerging cutting industry." },
+            'ETH': { name: "Ethiopia", level: "low", description: "Growing opal cutting industry." },
+            'NGA': { name: "Nigeria", level: "low", description: "Some local cutting of tourmaline and sapphire." },
+            'EGY': { name: "Egypt", level: "minimal", description: "Historic gemstone history, limited modern cutting." },
+            'MAR': { name: "Morocco", level: "minimal", description: "Some local mineral processing." },
+            'PAK': { name: "Pakistan", level: "low", description: "Emerald and gem deposits with developing skills." },
+            'AFG': { name: "Afghanistan", level: "minimal", description: "Lapis lazuli source, limited formal cutting." },
+            'IRN': { name: "Iran", level: "minimal", description: "Turquoise traditions, limited cutting." },
+            'KHM': { name: "Cambodia", level: "minimal", description: "Some sapphire and zircon cutting." },
+            'LAO': { name: "Laos", level: "minimal", description: "Limited gemstone activity." },
+            'BGD': { name: "Bangladesh", level: "minimal", description: "Limited cutting activity." },
+            'NPL': { name: "Nepal", level: "minimal", description: "Limited cutting, some traditional work." },
+            'AUT': { name: "Austria", level: "minimal", description: "Some jewelry traditions." },
+            'CZE': { name: "Czech Republic", level: "minimal", description: "Known for glass, limited gem cutting." },
+            'HUN': { name: "Hungary", level: "minimal", description: "Limited cutting." },
+            'ROU': { name: "Romania", level: "minimal", description: "Limited cutting." },
+            'BGR': { name: "Bulgaria", level: "minimal", description: "Limited cutting." },
+            'GRC': { name: "Greece", level: "minimal", description: "Limited cutting." },
+            'PRT': { name: "Portugal", level: "minimal", description: "Limited cutting." },
+            'NOR': { name: "Norway", level: "minimal", description: "Limited cutting." },
+            'SWE': { name: "Sweden", level: "minimal", description: "Limited cutting." },
+            'FIN': { name: "Finland", level: "minimal", description: "Limited cutting." },
+            'DNK': { name: "Denmark", level: "minimal", description: "Limited cutting." },
+            'IRL': { name: "Ireland", level: "minimal", description: "Limited cutting." },
+        };
+
+        // Default for countries without specific data
+        const defaultData = { level: "minimal", description: "Limited or no significant gemstone cutting industry." };
+
+        function getCountryData(countryCode) {
+            return countryData[countryCode] || { ...defaultData, name: countryCode };
+        }
+
+        // World map URL from Natural Earth (low resolution for web)
+        const worldMapUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+
+        const tooltip = document.getElementById('tooltip');
+        const mapContainer = document.getElementById('map');
+
+        // Create the map
+        async function createMap() {
+            try {
+                const response = await fetch(worldMapUrl);
+                const world = await response.json();
+
+                // Clear loading message
+                mapContainer.innerHTML = '';
+                mapContainer.classList.remove('loading');
+
+                // Get dimensions
+                const width = mapContainer.clientWidth || 960;
+                const height = Math.min(width * 0.5, 500);
+
+                // Create SVG
+                const svg = d3.select('#map')
+                    .append('svg')
+                    .attr('viewBox', `0 0 ${width} ${height}`)
+                    .attr('preserveAspectRatio', 'xMidYMid meet');
+
+                // Add ocean background
+                svg.append('rect')
+                    .attr('width', width)
+                    .attr('height', height)
+                    .attr('fill', '#edf1f5');
+
+                // Create projection (Natural Earth for nice rounded appearance)
+                const projection = d3.geoNaturalEarth1()
+                    .scale(width / 5.5)
+                    .translate([width / 2, height / 2]);
+
+                const path = d3.geoPath().projection(projection);
+
+                // Convert TopoJSON to GeoJSON
+                const countries = topojson.feature(world, world.objects.countries);
+
+                // Country code lookup (ISO numeric to ISO alpha-3)
+                const numericToAlpha3 = {
+                    '4': 'AFG', '8': 'ALB', '12': 'DZA', '24': 'AGO', '32': 'ARG',
+                    '36': 'AUS', '40': 'AUT', '50': 'BGD', '56': 'BEL', '68': 'BOL',
+                    '76': 'BRA', '100': 'BGR', '104': 'MMR', '116': 'KHM', '120': 'CMR',
+                    '124': 'CAN', '144': 'LKA', '152': 'CHL', '156': 'CHN', '170': 'COL',
+                    '178': 'COG', '180': 'COD', '188': 'CRI', '191': 'HRV', '192': 'CUB',
+                    '196': 'CYP', '203': 'CZE', '208': 'DNK', '214': 'DOM', '218': 'ECU',
+                    '818': 'EGY', '222': 'SLV', '231': 'ETH', '246': 'FIN', '250': 'FRA',
+                    '276': 'DEU', '288': 'GHA', '300': 'GRC', '320': 'GTM', '324': 'GIN',
+                    '328': 'GUY', '332': 'HTI', '340': 'HND', '344': 'HKG', '348': 'HUN',
+                    '352': 'ISL', '356': 'IND', '360': 'IDN', '364': 'IRN', '368': 'IRQ',
+                    '372': 'IRL', '376': 'ISR', '380': 'ITA', '392': 'JPN', '400': 'JOR',
+                    '398': 'KAZ', '404': 'KEN', '408': 'PRK', '410': 'KOR', '414': 'KWT',
+                    '418': 'LAO', '422': 'LBN', '426': 'LSO', '430': 'LBR', '434': 'LBY',
+                    '450': 'MDG', '454': 'MWI', '458': 'MYS', '466': 'MLI', '478': 'MRT',
+                    '484': 'MEX', '496': 'MNG', '504': 'MAR', '508': 'MOZ', '512': 'OMN',
+                    '516': 'NAM', '524': 'NPL', '528': 'NLD', '554': 'NZL', '558': 'NIC',
+                    '562': 'NER', '566': 'NGA', '578': 'NOR', '586': 'PAK', '591': 'PAN',
+                    '598': 'PNG', '600': 'PRY', '604': 'PER', '608': 'PHL', '616': 'POL',
+                    '620': 'PRT', '634': 'QAT', '642': 'ROU', '643': 'RUS', '646': 'RWA',
+                    '682': 'SAU', '686': 'SEN', '688': 'SRB', '694': 'SLE', '702': 'SGP',
+                    '703': 'SVK', '705': 'SVN', '706': 'SOM', '710': 'ZAF', '724': 'ESP',
+                    '729': 'SDN', '740': 'SUR', '748': 'SWZ', '752': 'SWE', '756': 'CHE',
+                    '760': 'SYR', '762': 'TJK', '764': 'THA', '768': 'TGO', '780': 'TTO',
+                    '788': 'TUN', '792': 'TUR', '795': 'TKM', '800': 'UGA', '804': 'UKR',
+                    '784': 'ARE', '826': 'GBR', '840': 'USA', '858': 'URY', '860': 'UZB',
+                    '862': 'VEN', '704': 'VNM', '887': 'YEM', '894': 'ZMB', '716': 'ZWE',
+                    '834': 'TZA', '158': 'TWN'
+                };
+
+                // Draw countries
+                svg.selectAll('.country')
+                    .data(countries.features)
+                    .enter()
+                    .append('path')
+                    .attr('class', d => {
+                        const code = numericToAlpha3[d.id] || d.id;
+                        const data = getCountryData(code);
+                        return `country ${data.level}`;
+                    })
+                    .attr('d', path)
+                    .attr('data-id', d => numericToAlpha3[d.id] || d.id)
+                    .on('mouseenter', function(event, d) {
+                        const code = numericToAlpha3[d.id] || d.id;
+                        const data = getCountryData(code);
+
+                        tooltip.querySelector('h3').textContent = data.name || code;
+                        tooltip.querySelector('p').textContent = data.description;
+                        const badge = tooltip.querySelector('.level-badge');
+                        badge.textContent = data.level.replace('-', ' ').replace('usa special', 'usa');
+                        badge.className = 'level-badge ' + data.level;
+                        tooltip.classList.add('visible');
+                    })
+                    .on('mousemove', function(event) {
+                        const x = event.clientX + 15;
+                        const y = event.clientY + 15;
+                        const tooltipRect = tooltip.getBoundingClientRect();
+                        const maxX = window.innerWidth - tooltipRect.width - 20;
+                        const maxY = window.innerHeight - tooltipRect.height - 20;
+                        tooltip.style.left = Math.min(x, maxX) + 'px';
+                        tooltip.style.top = Math.min(y, maxY) + 'px';
+                    })
+                    .on('mouseleave', function() {
+                        tooltip.classList.remove('visible');
+                    });
+
+                // Add pulsing markers for major cutting centers
+                const majorCenters = [
+                    { coords: [75.8, 26.9], name: 'Jaipur' },     // India
+                    { coords: [100.5, 13.8], name: 'Bangkok' },   // Thailand
+                    { coords: [79.9, 6.9], name: 'Colombo' },     // Sri Lanka
+                ];
+
+                majorCenters.forEach(center => {
+                    const [x, y] = projection(center.coords);
+
+                    // Pulse ring
+                    svg.append('circle')
+                        .attr('class', 'pulse-marker')
+                        .attr('cx', x)
+                        .attr('cy', y)
+                        .attr('r', 8);
+
+                    // Inner dot
+                    svg.append('circle')
+                        .attr('class', 'pulse-marker-inner')
+                        .attr('cx', x)
+                        .attr('cy', y)
+                        .attr('r', 4);
+                });
+
+            } catch (error) {
+                console.error('Error loading map:', error);
+                mapContainer.innerHTML = '<p style="padding:40px;text-align:center;color:#666;">Unable to load map. Please refresh the page.</p>';
+            }
+        }
+
+        // Initialize map
+        createMap();
+
+        // Redraw on resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                document.getElementById('map').innerHTML = '';
+                createMap();
+            }, 250);
+        });
+    </script>
+</body>
+</html>
