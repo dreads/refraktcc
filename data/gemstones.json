@@ -176,6 +176,25 @@
     "price": 0
   },
   {
+    "id": 29,
+    "species": "Emerald",
+    "color": "Green",
+    "weightCarats": 1.1,
+    "dimensions": "Various",
+    "outline": "Emerald",
+    "cutName": "Ideal Emerald 133",
+    "sourceGeo": "Kagem Mine, Zambia",
+    "isMined": true,
+    "dateCut": "2025-12-01",
+    "notes": "Small emeralds in various sizes and clarities originating from Kagem mine in Zambia. Zambian emeralds from Kagem are distinguished by their characteristic bluish-green color, which tends to be slightly cooler in tone than the warmer, more purely green emeralds from Colombian deposits. This color difference stems from their distinct geological formation: Zambian emeralds contain higher concentrations of iron alongside the chromium and vanadium that give all emeralds their green hue. Like virtually all emeralds, Kagem stones contain inclusions, often referred to in the trade as jardin (French for garden) due to their plant-like appearance. Zambian emeralds typically display fewer visible inclusions than many Colombian stones, often resulting in better clarity, though they may show characteristic features such as mica platelets, fluid inclusions, and growth tubes that gemologists use for origin determination. The crystals from Kagem tend to form in mica-schist host rock rather than the sedimentary shales associated with Colombian emeralds, contributing to both their visual character and their identification under laboratory analysis. In house Type A treated with natural cedar oil to ethically enhance clarity without permanently altering the stones. Total weight of gems in still photo is 1.1 carats.",
+    "imagesPath": "images/gems/emerald-zambia-trio-1.1",
+    "defaultImage": "emerald-zambia-trio-1.1-1.jpg",
+    "additionalImages": [
+      "emerald-zambia-0.2.mp4"
+    ],
+    "price": 0
+  },
+  {
     "id": 4,
     "species": "Topaz (Imperial)",
     "color": "Brownish Pink",
@@ -221,10 +240,10 @@
     "dimensions": "7.1x3.6mm",
     "outline": "Emerald",
     "cutName": "Emerald",
-    "sourceGeo": "Zambia",
+    "sourceGeo": "Kagem Mine, Zambia",
     "isMined": true,
     "dateCut": "2025-08-14",
-    "notes": "These small Zambian emeralds have a deeper darker, more saturated green and tend to be cleaner than Colombian varieties.  In house Type A treated with natural cedar oil to ethically enhance clarity without permanently altering the stone.",
+    "notes": "These small Zambian emeralds have a deeper darker, more saturated green and tend to be cleaner than Colombian varieties.  Zambian emeralds from Kagem are distinguished by their characteristic bluish-green color, which tends to be slightly cooler in tone than the warmer, more purely green emeralds from Colombian deposits. This color difference stems from their distinct geological formation: Zambian emeralds contain higher concentrations of iron alongside the chromium and vanadium that give all emeralds their green hue. Like virtually all emeralds, Kagem stones contain inclusions, often referred to in the trade as jardin (French for garden) due to their plant-like appearance. Zambian emeralds typically display fewer visible inclusions than many Colombian stones, often resulting in better clarity, though they may show characteristic features such as mica platelets, fluid inclusions, and growth tubes that gemologists use for origin determination. The crystals from Kagem tend to form in mica-schist host rock rather than the sedimentary shales associated with Colombian emeralds, contributing to both their visual character and their identification under laboratory analysis. In house Type A treated with natural cedar oil to ethically enhance clarity without permanently altering the stone.",
     "imagesPath": "images/gems/emerald-zambia-0.4",
     "defaultImage": "emerald-zambia-0.4.jpg",
     "additionalImages": [],
