@@ -17,10 +17,9 @@
         <nav class="main-nav" aria-label="Main navigation">
             <ul>
                 <li><a href="index.html">Cut Gemstones</a></li>
-<!--                <li><a href="custom.html">Custom Cutting</a></li>-->
+                <li><a href="custom.html">Custom Cutting</a></li>
                 <li><a href="about.html">Our Story</a></li>
-                <!-- Temporarily disabled -->
-                <!-- <li><a href="contact.html" class="active">Contact</a></li> -->
+                 <li><a href="contact.html" class="active">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -28,7 +27,18 @@
     <main role="main">
         <section class="text-content-title">
             <h2>Contact</h2>
-            <p class="text-content-block">We are located in Austin, Texas. For inquiries, please email refraktcc@gmail.com</p>
+            <p class="text-content-block">We are located in Austin, Texas. For inquiries, please use the form below.</p>
+          <form class="contact-form" action="https://formspree.io/f/xgozyprn" method="POST">
+            <label>
+              <span>Your email:</span>
+              <input type="email" name="email" required aria-required="true">
+            </label>
+            <label>
+              <span>Your message:</span>
+              <textarea name="message" required aria-required="true"></textarea>
+            </label>
+            <button type="submit">Send Message</button>
+          </form>
         </section>
     </main>
 
