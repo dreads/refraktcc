@@ -1,5 +1,27 @@
 [
   {
+    "id": 32,
+    "species": "Spinel",
+    "color": "Yellow/Green",
+    "weightCarats": 4.4,
+    "dimensions": "11x8.65mm",
+    "outline": "Antique Rectangular Cushion",
+    "cutName": "Uno Poco Mesa",
+    "sourceGeo": "",
+    "isMined": false,
+    "dateCut": "2026-02-14",
+    "notes": "This color changing antique cushion spinel is cut from rare Djeva #131. Combining romantic lines with a lively color, this lab created stone is full of surprises.\n\nWhen moving from cool to warm lighting, the color shifts between intense green and yellow, while glowing bright neon green in UV light. When viewed from the side, the intense green recedes, evoking the ethereal, fleeting nature of la fée verte. \n\nThe cut is the vintage-look \"Una Poco Mesa\", by Norman W. Steele.",
+    "imagesPath": "images/gems/spinel-djeva131-antique-cushion-4.4",
+    "defaultImage": "spinel-djeva131-antique-cushion-4.4-1.jpg",
+    "additionalImages": [
+     "spinel-djeva131-antique-cushion-4.4_cool-light.mp4",
+      "spinel-djeva131-antique-cushion-4.4-rotate.mp4",
+      "spinel-djeva131-antique-cushion-4.4-warm+uv-light.mp4",
+      "spinel-djeva131-antique-cushion-4.4-oscillate.mp4"
+    ],
+    "price": 0
+  },
+  {
     "id": 31,
     "species": "Sapphire (Padparascha)",
     "color": "Pink/peach",
