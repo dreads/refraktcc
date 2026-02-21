@@ -372,6 +372,25 @@
     "price": 0
   },
   {
+    "id": 11,
+    "species": "Tourmaline",
+    "color": "Green",
+    "weightCarats": 0.8,
+    "dimensions": "8.56x3.16mm",
+    "outline": "Rectangle",
+    "cutName": "Pixel (Opposed bar)",
+    "sourceGeo": "",
+    "isMined": true,
+    "dateCut": "2025-11-15",
+    "notes": "Elongated pixel cut green tourmaline give a bouncing LED effect.",
+    "imagesPath": "images/gems/tourmaline-green-0.8",
+    "defaultImage": "tourmaline-green-0.8.jpg",
+    "additionalImages": [
+      "tourmaline-green-0.8-2.jpg"
+    ],
+    "price": 0
+  },
+  {
     "id": 12,
     "species": "Heliodor",
     "color": "Light yellow",
