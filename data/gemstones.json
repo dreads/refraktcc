@@ -1,5 +1,26 @@
 [
   {
+    "id": 33,
+    "species": "Tourmaline",
+    "color": "Bi-Color (Blue/Yellow)",
+    "weightCarats": 4.5,
+    "dimensions": "27.35x4.23",
+    "outline": "Rectangle",
+    "cutName": "Tourmaline Baguette",
+    "sourceGeo": "Brazil",
+    "isMined": true,
+    "dateCut": "2026-02-20",
+    "notes": "This unique tourmaline is bi-colored, half pale straw and half sky blue. Hints of green appear on the straw colored end when tilted just right. Cut in an extremely stretched baguette, this outstanding gem's natural inclusions, subtle color variations, and eye catching shape create an elegant touch.",
+    "imagesPath": "images/gems/tourmaline-baguette-4.5",
+    "defaultImage": "tourmaline-baguette-4.5-1.jpg",
+    "additionalImages": [
+      "tourmaline-baguette-4.5.mp4",
+      "tourmaline-baguette-4.5-2.jpg",
+      "tourmaline-baguette-4.5-3.jpg"
+    ],
+    "price": 0
+  },
+  {
     "id": 32,
     "species": "Spinel",
     "color": "Yellow/Green",
@@ -14,7 +35,7 @@
     "imagesPath": "images/gems/spinel-djeva131-antique-cushion-4.4",
     "defaultImage": "spinel-djeva131-antique-cushion-4.4-1.jpg",
     "additionalImages": [
-     "spinel-djeva131-antique-cushion-4.4_cool-light.mp4",
+      "spinel-djeva131-antique-cushion-4.4_cool-light.mp4",
       "spinel-djeva131-antique-cushion-4.4-rotate.mp4",
       "spinel-djeva131-antique-cushion-4.4-warm+uv-light.mp4",
       "spinel-djeva131-antique-cushion-4.4-oscillate.mp4"
